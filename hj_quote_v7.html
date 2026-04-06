@@ -81,7 +81,7 @@
     border-top: 1px solid var(--border);
     background: rgba(255,255,255,0.02);
   }
-  .card-row.selected .card-body { display: block; }
+  .card-row.selected > .card-body { display: block; }
   .card-body-title { font-size: 11px; letter-spacing: 0.15em; color: var(--gold); padding: 12px 0 8px; text-transform: uppercase; }
 
   /* Radio sub-options */
@@ -611,6 +611,13 @@ function toggleCard(id, event) {
   if (!el || el.classList.contains('required')) return;
   el.classList.toggle('selected');
   cardState[id] = el.classList.contains('selected');
+  if (!cardState[id]) {
+    el.querySelectorAll('.sub-opt.selected').forEach(s => s.classList.remove('selected'));
+    el.querySelectorAll('.sub-opt[onclick]').forEach(s => {
+      const m = (s.getAttribute('onclick')||'').match(/(?:radioSub|checkSub)s*([^,]+,s*'([^']+)'/);
+      if (m) { radioState[m[1]] = null; if (checkState[m[1]]) checkState[m[1]].clear(); }
+    });
+  }
 }
 
 function radioSub(e, group, val, el) {
@@ -619,6 +626,12 @@ function radioSub(e, group, val, el) {
   parent.querySelectorAll('.sub-opt').forEach(s => s.classList.remove('selected'));
   el.classList.add('selected');
   radioState[group] = val;
+  const card = el.closest('.card-row');
+  if (card && !card.classList.contains('selected') && !card.classList.contains('required')) {
+    card.classList.add('selected');
+    const cid = card.id.replace('card-', '');
+    cardState[cid] = true;
+  }
 }
 
 function checkSub(e, group, val, el) {
@@ -627,6 +640,14 @@ function checkSub(e, group, val, el) {
   el.classList.toggle('selected');
   if (el.classList.contains('selected')) checkState[group].add(val);
   else checkState[group].delete(val);
+  const card = el.closest('.card-row');
+  if (card && !card.classList.contains('required')) {
+    const anySelected = card.querySelectorAll('.sub-opt.selected').length > 0;
+    if (anySelected && !card.classList.contains('selected')) {
+      card.classList.add('selected');
+      cardState[card.id.replace('card-', '')] = true;
+    }
+  }
 }
 
 function chgBlock(e, type, d) {
