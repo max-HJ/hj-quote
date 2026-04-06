@@ -612,11 +612,7 @@ function toggleCard(id, event) {
   el.classList.toggle('selected');
   cardState[id] = el.classList.contains('selected');
   if (!cardState[id]) {
-    el.querySelectorAll('.sub-opt.selected').forEach(s => s.classList.remove('selected'));
-    el.querySelectorAll('.sub-opt[onclick]').forEach(s => {
-      const m = (s.getAttribute('onclick')||'').match(/(?:radioSub|checkSub)s*([^,]+,s*'([^']+)'/);
-      if (m) { radioState[m[1]] = null; if (checkState[m[1]]) checkState[m[1]].clear(); }
-    });
+    el.querySelectorAll('.sub-opt.selected').forEach(function(s) { s.classList.remove('selected'); });
   }
 }
 
