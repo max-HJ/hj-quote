@@ -65,9 +65,9 @@
     transition: all 0.15s;
     display: flex; align-items: center; justify-content: center;
   }
-  .card-row.selected .chk { border-color: var(--gold); background: var(--gold); }
+  .card-row.selected > .card-header .chk { border-color: var(--gold); background: var(--gold); }
   .chk-mark { display: none; color: var(--black); font-size: 11px; font-weight: 700; }
-  .card-row.selected .chk-mark { display: block; }
+  .card-row.selected > .card-header .chk-mark { display: block; }
 
   .card-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--white); }
   .card-row.selected .card-title { color: var(--gold); }
